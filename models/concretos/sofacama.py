@@ -3,12 +3,11 @@ Clase SofaCama que implementa herencia múltiple.
 Esta clase hereda tanto de Sofa como de Cama.
 """
 
-# TODO: Importar las clases padre
-# from .sofa import Sofa
-# from .cama import Cama
+from .sofa import Sofa
+from .cama import Cama
 
 
-class SofaCama:
+class SofaCama(Sofa, Cama):
     """
     Clase que implementa herencia múltiple heredando de Sofa y Cama.
     
@@ -24,10 +23,113 @@ class SofaCama:
     
     def __init__(self, nombre: str, material: str, color: str, precio_base: float,
                  capacidad_personas: int = 3, material_tapizado: str = "tela",
-                 tamaño_cama: str = "matrimonial", incluye_colchon: bool = True,
+                 tamaño_cama: str = "queen", incluye_colchon: bool = True,
                  mecanismo_conversion: str = "plegable"):
         """
         Constructor del sofá-cama.
+        
+        Args:
+            capacidad_personas: Capacidad como sofá
+            tamaño_cama: Tamaño cuando está desplegado como cama
+            incluye_colchon: Si incluye colchón
+            mecanismo_conversion: Tipo de mecanismo (plegable, corredizo, etc.)
+        """
+        # Inicializar Sofa (primer padre)
+        Sofa.__init__(self, nombre, material, color, precio_base,
+                     capacidad_personas=capacidad_personas,
+                     material_tapizado=material_tapizado,
+                     es_modular=False)
+        
+        # Inicializar atributos específicos de sofá-cama
+        self._tamaño_cama = tamaño_cama
+        self._incluye_colchon = incluye_colchon
+        self._mecanismo_conversion = mecanismo_conversion
+    
+    @property
+    def tamaño_cama(self) -> str:
+        """Getter para el tamaño cuando es cama."""
+        return self._tamaño_cama
+    
+    @property
+    def incluye_colchon(self) -> bool:
+        """Getter para si incluye colchón."""
+        return self._incluye_colchon
+    
+    @property
+    def mecanismo_conversion(self) -> str:
+        """Getter para el tipo de mecanismo."""
+        return self._mecanismo_conversion
+    
+    @tamaño_cama.setter
+    def tamaño_cama(self, value: str) -> None:
+        """Setter para tamaño de cama."""
+        tamaños_validos = ["single", "double", "queen", "king"]
+        if value.lower() not in tamaños_validos:
+            raise ValueError(f"Tamaño debe ser uno de: {tamaños_validos}")
+        self._tamaño_cama = value
+    
+    @incluye_colchon.setter
+    def incluye_colchon(self, value: bool) -> None:
+        """Setter para colchón."""
+        self._incluye_colchon = value
+    
+    @mecanismo_conversion.setter
+    def mecanismo_conversion(self, value: str) -> None:
+        """Setter para mecanismo."""
+        self._mecanismo_conversion = value
+    
+    def calcular_precio(self) -> float:
+        """
+        Calcula el precio del sofá-cama.
+        Combina características de sofá y cama.
+        
+        Returns:
+            float: Precio calculado
+        """
+        # Usar el precio del sofá como base
+        precio = self.precio_base
+        
+        # Factor de comodidad (del sofá)
+        precio *= self.calcular_factor_comodidad()
+        
+        # Premium por capacidad como sofá
+        precio *= (1.0 + (self.capacidad_personas - 1) * 0.2)
+        
+        # Premium por tamaño de cama
+        tamaño_factor = {"single": 1.1, "double": 1.3, "queen": 1.5, "king": 1.7}
+        precio *= tamaño_factor.get(self._tamaño_cama.lower(), 1.0)
+        
+        # Premium si incluye colchón
+        if self._incluye_colchon:
+            precio *= 1.3
+        
+        # Premium por mecanismo de conversión
+        if self._mecanismo_conversion.lower() == "electrico":
+            precio *= 1.4
+        elif self._mecanismo_conversion.lower() == "corredizo":
+            precio *= 1.2
+        else:  # plegable
+            precio *= 1.15
+        
+        return round(precio, 2)
+    
+    def obtener_descripcion(self) -> str:
+        """
+        Obtiene una descripción completa del sofá-cama.
+        
+        Returns:
+            str: Descripción detallada
+        """
+        descripcion = f"Sofá-Cama {self.nombre}\n"
+        descripcion += f"Material: {self.material}\n"
+        descripcion += f"Color: {self.color}\n"
+        descripcion += f"Capacidad (sofá): {self.capacidad_personas} personas\n"
+        descripcion += f"Tamaño (cama): {self._tamaño_cama}\n"
+        descripcion += self.obtener_info_asiento() + "\n"
+        descripcion += f"Incluye colchón: {'Sí' if self._incluye_colchon else 'No'}\n"
+        descripcion += f"Mecanismo: {self._mecanismo_conversion}\n"
+        descripcion += f"Precio: ${self.calcular_precio()}"
+        return descripcion
         
         Args:
             mecanismo_conversion: Tipo de mecanismo de conversión (plegable, extensible, etc.)
