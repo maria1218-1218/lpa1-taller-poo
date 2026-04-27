@@ -52,7 +52,7 @@ Cuenta: [@maria1218-1218]
 * Clonar el proyecto
 
     ```bash
-    git clone https://github.com/clubdecomputacion/lpa1-taller-poo.git
+    git clone https://github.com/maria1218-1218/lpa1-taller-poo.git
     cd lpa1-taller-poo
     ```
 
