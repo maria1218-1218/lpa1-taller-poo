@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mueblería Moderna</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <div class="navbar-brand">
+        <span class="brand-icon">🏠</span>
+        <span class="brand-name">Mueblería</span>
+      </div>
+      <nav class="navbar-nav">
+        <button class="nav-tab active" data-tab="catalogo">Catálogo</button>
+        <button class="nav-tab" data-tab="comedores">Comedores</button>
+        <button class="nav-tab" data-tab="estadisticas">Estadísticas</button>
+        <button class="nav-tab" data-tab="ventas">Ventas</button>
+      </nav>
+      <div class="navbar-search">
+        <input type="text" id="global-search" placeholder="🔍 Buscar muebles...">
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Toast container ── -->
+  <div id="toast-container"></div>
+
+  <!-- ── Main ── -->
+  <main class="main-content">
+
+    <!-- Catálogo -->
+    <section id="tab-catalogo" class="tab-pane active">
+      <div class="page-header">
+        <div>
+          <h2>Catálogo de Muebles</h2>
+          <p class="page-subtitle" id="catalogo-count">Cargando...</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" id="btn-descuento">🏷️ Descuentos</button>
+          <button class="btn btn-primary" id="btn-add">+ Agregar Mueble</button>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <select id="filter-tipo" class="filter-select">
+          <option value="">Todos los tipos</option>
+          <option>Silla</option><option>Sillon</option><option>Sofa</option>
+          <option>Cama</option><option>SofaCama</option><option>Mesa</option>
+          <option>Escritorio</option><option>Armario</option><option>Cajonera</option>
+        </select>
+        <select id="filter-material" class="filter-select">
+          <option value="">Todos los materiales</option>
+          <option>Madera</option><option>Metal</option><option>Tela</option>
+          <option>Cuero</option><option>Vidrio</option><option>Plástico</option>
+        </select>
+        <input type="number" id="filter-min" placeholder="Precio mín." class="filter-input">
+        <input type="number" id="filter-max" placeholder="Precio máx." class="filter-input">
+        <button class="btn btn-sm btn-primary" onclick="applyFilters()">Filtrar</button>
+        <button class="btn btn-sm btn-outline" onclick="clearFilters()">✕ Limpiar</button>
+      </div>
+
+      <div id="furniture-grid" class="furniture-grid">
+        <div class="loading">Cargando muebles...</div>
+      </div>
+    </section>
+
+    <!-- Comedores -->
+    <section id="tab-comedores" class="tab-pane">
+      <div class="page-header">
+        <div>
+          <h2>Sets de Comedor</h2>
+          <p class="page-subtitle" id="comedores-count">Cargando...</p>
+        </div>
+      </div>
+      <div id="comedores-grid" class="furniture-grid">
+        <div class="loading">Cargando comedores...</div>
+      </div>
+    </section>
+
+    <!-- Estadísticas -->
+    <section id="tab-estadisticas" class="tab-pane">
+      <div class="page-header">
+        <h2>Dashboard</h2>
+        <button class="btn btn-sm btn-outline" onclick="loadEstadisticas()">↺ Actualizar</button>
+      </div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="charts-row">
+        <div class="chart-card">
+          <h3>Distribución por Tipo</h3>
+          <div id="chart-tipos"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Resumen de Tienda</h3>
+          <div id="store-summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ventas -->
+    <section id="tab-ventas" class="tab-pane">
+      <div class="page-header">
+        <div>
+          <h2>Historial de Ventas</h2>
+          <p class="page-subtitle" id="ventas-count">Cargando...</p>
+        </div>
+      </div>
+      <div id="ventas-summary" class="ventas-summary"></div>
+      <div id="ventas-table-container">
+        <div class="loading">Cargando ventas...</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Modal: Detalle ── -->
+  <div id="modal-detail" class="modal-overlay" hidden>
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-detail-title">Detalle</h3>
+        <button class="modal-close" onclick="closeModal('modal-detail')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-detail-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-danger"  id="modal-detail-delete">Eliminar</button>
+        <button class="btn btn-primary" id="modal-detail-sell">Vender</button>
+        <button class="btn btn-outline" onclick="closeModal('modal-detail')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Agregar mueble ── -->
+  <div id="modal-add" class="modal-overlay" hidden>
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Agregar Mueble</h3>
+        <button class="modal-close" onclick="closeModal('modal-add')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-add-mueble" onsubmit="return false">
+          <div class="form-group">
+            <label>Tipo *</label>
+            <select id="add-tipo" required onchange="updateFormFields()">
+              <option value="">Seleccionar tipo...</option>
+              <option>Silla</option><option>Sillon</option><option>Sofa</option>
+              <option>Cama</option><option>SofaCama</option><option>Mesa</option>
+              <option>Escritorio</option><option>Armario</option><option>Cajonera</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre *</label>
+              <input type="text" id="add-nombre" required placeholder="Nombre del mueble">
+            </div>
+            <div class="form-group">
+              <label>Precio Base *</label>
+              <input type="number" id="add-precio" required min="1" step="0.01" placeholder="0.00">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Material *</label>
+              <input type="text" id="add-material" required placeholder="Madera, Metal...">
+            </div>
+            <div class="form-group">
+              <label>Color *</label>
+              <input type="text" id="add-color" required placeholder="Café, Negro...">
+            </div>
+          </div>
+          <div id="dynamic-fields"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-add')">Cancelar</button>
+        <button class="btn btn-primary" onclick="submitAddMueble()">Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Venta ── -->
+  <div id="modal-sell" class="modal-overlay" hidden>
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3>Realizar Venta</h3>
+        <button class="modal-close" onclick="closeModal('modal-sell')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="sell-product-info" id="sell-mueble-info"></div>
+        <div class="form-group" style="margin-top:16px">
+          <label>Nombre del Cliente</label>
+          <input type="text" id="sell-cliente" placeholder="Cliente Anónimo">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-sell')">Cancelar</button>
+        <button class="btn btn-primary" onclick="confirmSell()">Confirmar Venta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Descuento ── -->
+  <div id="modal-discount" class="modal-overlay" hidden>
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3>Aplicar Descuento</h3>
+        <button class="modal-close" onclick="closeModal('modal-discount')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="discount-categoria">
+            <option value="silla">Silla</option>
+            <option value="sillon">Sillón</option>
+            <option value="sofa">Sofá</option>
+            <option value="cama">Cama</option>
+            <option value="sofacama">SofaCama</option>
+            <option value="mesa">Mesa</option>
+            <option value="escritorio">Escritorio</option>
+            <option value="armario">Armario</option>
+            <option value="cajonera">Cajonera</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Porcentaje de descuento (%)</label>
+          <input type="number" id="discount-porcentaje" min="1" max="100" value="10">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-discount')">Cancelar</button>
+        <button class="btn btn-primary" onclick="applyDiscount()">Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

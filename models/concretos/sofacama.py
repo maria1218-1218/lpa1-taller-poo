@@ -5,6 +5,7 @@ Esta clase hereda tanto de Sofa como de Cama.
 
 from .sofa import Sofa
 from .cama import Cama
+from ..categorias.asientos import Asiento
 
 
 class SofaCama(Sofa, Cama):
@@ -36,10 +37,11 @@ class SofaCama(Sofa, Cama):
             incluye_colchon: Si incluye colchón
             mecanismo_conversion: Tipo de mecanismo (plegable, corredizo, electrico)
         """
-        Sofa.__init__(self, nombre, material, color, precio_base,
-                      capacidad_personas=capacidad_personas,
-                      material_tapizado=material_tapizado,
-                      es_modular=False)
+        Asiento.__init__(self, nombre, material, color, precio_base,
+                         capacidad_personas=capacidad_personas,
+                         tiene_respaldo=True,
+                         material_tapizado=material_tapizado)
+        self._es_modular = False
         self._tamaño_cama = tamaño_cama
         self._incluye_colchon = incluye_colchon
         self._mecanismo_conversion = mecanismo_conversion

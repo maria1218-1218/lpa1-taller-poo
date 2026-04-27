@@ -5,7 +5,14 @@
       "Bash(py -m pytest tests/ -v --tb=short)",
       "PowerShell(Get-Command python3, python3.exe, py -ErrorAction SilentlyContinue)",
       "PowerShell($env:PATH -split \";\" | Where-Object { $_ -match \"python|conda|miniconda\" })",
-      "PowerShell(& \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\python3.exe\" --version 2>&1)"
+      "PowerShell(& \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\python3.exe\" --version 2>&1)",
+      "Bash(python -c ' *)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(ls venv/Scripts/)",
+      "Bash(ls .venv/Scripts/)",
+      "Bash(venv/Scripts/pytest tests/ -v --tb=short)",
+      "Bash(venv/Scripts/pip install *)",
+      "Bash(venv/Scripts/python -c ' *)"
     ]
   }
 }
