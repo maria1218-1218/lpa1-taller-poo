@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Punto de entrada principal para la aplicación Tienda de Muebles.
-Este archivo inicializa la aplicación y proporciona datos de ejemplo.
 """
 
 from services.tienda import TiendaMuebles
@@ -19,344 +18,148 @@ from models.concretos.sofacama import SofaCama
 from models.composicion.comedor import Comedor
 
 
-def crear_catalogo_inicial(tienda: 'TiendaMuebles') -> None:
-    """
-    Crea un catálogo inicial de muebles para demostrar el funcionamiento del sistema.
-    Esta función muestra cómo instanciar diferentes tipos de muebles y agregarlos a la tienda.
-    
-    Args:
-        tienda: Instancia de TiendaMuebles donde agregar los muebles
-    """
+def crear_catalogo_inicial(tienda: TiendaMuebles) -> None:
+    """Crea un catálogo inicial de muebles para demostrar el funcionamiento."""
     print("🔨 Creando catálogo inicial de muebles...")
-    
+
     sillas = [
-        Silla(
-            nombre="Silla Clásica",
-            material="Madera",
-            color="Café",
-            precio_base=150.0,
-            tiene_respaldo=True,
-            material_tapizado="tela"
-        ),
-        Silla(
-            nombre="Silla de Oficina Ejecutiva",
-            material="Metal",
-            color="Negro",
-            precio_base=350.0,
-            tiene_respaldo=True,
-            material_tapizado="cuero",
-            altura_regulable=True,
-            tiene_ruedas=True
-        ),
-        Silla(
-            nombre="Silla Moderna Minimalista",
-            material="Plástico",
-            color="Blanco",
-            precio_base=80.0,
-            tiene_respaldo=True
-        )
+        Silla("Silla Clásica", "Madera", "Café", 150.0,
+              tiene_respaldo=True, material_tapizado="tela"),
+        Silla("Silla de Oficina Ejecutiva", "Metal", "Negro", 350.0,
+              tiene_respaldo=True, material_tapizado="cuero",
+              altura_regulable=True, tiene_ruedas=True),
+        Silla("Silla Moderna Minimalista", "Plástico", "Blanco", 80.0,
+              tiene_respaldo=True),
     ]
-    
+
     mesas = [
-        Mesa(
-            nombre="Mesa de Comedor Familiar",
-            material="Madera",
-            color="Roble",
-            precio_base=500.0,
-            forma="rectangular",
-            capacidad_personas=6
-        ),
-        Mesa(
-            nombre="Mesa de Centro Redonda",
-            material="Vidrio",
-            color="Transparente",
-            precio_base=300.0,
-            forma="redonda",
-            capacidad_personas=4
-        ),
-        Mesa(
-            nombre="Mesa de Trabajo Industrial",
-            material="Metal",
-            color="Gris",
-            precio_base=450.0,
-            forma="rectangular",
-            capacidad_personas=4
-        )
+        Mesa("Mesa de Comedor Familiar", "Madera", "Roble", 500.0,
+             largo=180.0, ancho=90.0, alto=75.0, material_superficie="madera"),
+        Mesa("Mesa de Centro Redonda", "Vidrio", "Transparente", 300.0,
+             largo=100.0, ancho=100.0, alto=45.0, material_superficie="vidrio"),
+        Mesa("Mesa de Trabajo Industrial", "Metal", "Gris", 450.0,
+             largo=150.0, ancho=75.0, alto=85.0, material_superficie="fórmica"),
     ]
-    
+
     asientos_grandes = [
-        Sillon(
-            nombre="Sillón Reclinable de Lujo",
-            material="Cuero",
-            color="Marrón",
-            precio_base=800.0,
-            tiene_respaldo=True,
-            material_tapizado="cuero",
-            es_reclinable=True,
-            tiene_reposapiés=True
-        ),
-        Sofa(
-            nombre="Sofá Modular de 3 Plazas",
-            material="Tela",
-            color="Gris",
-            precio_base=1200.0,
-            capacidad_personas=3,
-            tiene_respaldo=True,
-            material_tapizado="tela",
-            es_modular=True,
-            incluye_cojines=True
-        ),
-        Sofa(
-            nombre="Sofá Chesterfield Clásico",
-            material="Cuero",
-            color="Verde",
-            precio_base=2000.0,
-            capacidad_personas=2,
-            tiene_respaldo=True,
-            material_tapizado="cuero",
-            es_modular=False,
-            incluye_cojines=False
-        )
+        Sillon("Sillón Reclinable de Lujo", "Cuero", "Marrón", 800.0,
+               tiene_brazos=True, material_tapizado="cuero"),
+        Sofa("Sofá Modular de 3 Plazas", "Tela", "Gris", 1200.0,
+             capacidad_personas=3, material_tapizado="tela", es_modular=True),
+        Sofa("Sofá Chesterfield Clásico", "Cuero", "Verde", 2000.0,
+             capacidad_personas=2, material_tapizado="cuero", es_modular=False),
     ]
-    
+
     almacenamiento = [
-        Armario(
-            nombre="Armario Ropero 4 Puertas",
-            material="Madera",
-            color="Blanco",
-            precio_base=600.0,
-            num_puertas=4,
-            num_cajones=2,
-            tiene_espejos=True
-        ),
-        Cajonera(
-            nombre="Cajonera Vintage 5 Cajones",
-            material="Madera",
-            color="Vintage",
-            precio_base=300.0,
-            num_cajones=5,
-            tiene_ruedas=False
-        ),
-        Cajonera(
-            nombre="Cajonera Oficina con Ruedas",
-            material="Metal",
-            color="Gris",
-            precio_base=180.0,
-            num_cajones=3,
-            tiene_ruedas=True
-        )
+        Armario("Armario Ropero 2 Puertas", "Madera", "Blanco", 600.0,
+                capacidad_volumen=3.5, numero_compartimientos=4,
+                tiene_espejo=True, numero_puertas=2),
+        Cajonera("Cajonera Vintage 5 Cajones", "Madera", "Café", 300.0,
+                 capacidad_volumen=2.0, numero_compartimientos=5,
+                 profundidad_cajones=50.0, deslizable=False),
+        Cajonera("Cajonera Oficina con Ruedas", "Metal", "Gris", 180.0,
+                 capacidad_volumen=1.5, numero_compartimientos=3,
+                 profundidad_cajones=45.0, deslizable=True),
     ]
-    
+
     dormitorio_oficina = [
-        Cama(
-            nombre="Cama King Size de Lujo",
-            material="Madera",
-            color="Nogal",
-            precio_base=1000.0,
-            tamaño="king",
-            incluye_colchon=True,
-            tiene_cabecera=True
-        ),
-        Cama(
-            nombre="Cama Individual Juvenil",
-            material="Metal",
-            color="Azul",
-            precio_base=400.0,
-            tamaño="individual",
-            incluye_colchon=False,
-            tiene_cabecera=True
-        ),
-        Escritorio(
-            nombre="Escritorio Ejecutivo L-Shape",
-            material="Madera",
-            color="Caoba",
-            precio_base=750.0,
-            forma="L",
-            tiene_cajones=True,
-            num_cajones=4
-        ),
-        Escritorio(
-            nombre="Escritorio Gaming RGB",
-            material="Metal",
-            color="Negro",
-            precio_base=500.0,
-            forma="rectangular",
-            tiene_cajones=False,
-            tiene_iluminacion=True
-        )
+        Cama("Cama King Size de Lujo", "Madera", "Nogal", 1000.0,
+             tamaño="king", tiene_almacenamiento=True, es_electrica=False),
+        Cama("Cama Double con Almacenamiento", "Madera", "Blanco", 400.0,
+             tamaño="double", tiene_almacenamiento=True, es_electrica=False),
+        Escritorio("Escritorio Ejecutivo", "Madera", "Caoba", 750.0,
+                   largo=160.0, ancho=80.0, alto=75.0, material_superficie="madera",
+                   numero_cajones=4, tiene_cajonera=True, altura_regulable=False),
+        Escritorio("Escritorio Gaming Moderno", "Metal", "Negro", 500.0,
+                   largo=140.0, ancho=70.0, alto=75.0, material_superficie="fórmica",
+                   numero_cajones=2, tiene_cajonera=False, altura_regulable=True),
     ]
-    
+
     sofacama = SofaCama(
-        nombre="SofaCama Convertible Premium",
-        material="Tela",
-        color="Beige",
-        precio_base=1500.0,
-        capacidad_personas=3,
-        material_tapizado="tela",
-        tamaño_cama="matrimonial",
-        incluye_colchon=True,
-        mecanismo_conversion="hidraulico"
+        "SofaCama Convertible Premium", "Tela", "Beige", 1500.0,
+        capacidad_personas=3, material_tapizado="tela",
+        tamaño_cama="queen", incluye_colchon=True, mecanismo_conversion="plegable",
     )
-    
-    todos_los_muebles = sillas + mesas + asientos_grandes + almacenamiento + dormitorio_oficina + [sofacama]
-    
-    for mueble in todos_los_muebles:
-        resultado = tienda.agregar_mueble(mueble)
-        print(f"  ✓ {resultado}")
-    
-    print(f"✅ Catálogo inicial creado con éxito!")
+
+    for mueble in sillas + mesas + asientos_grandes + almacenamiento + dormitorio_oficina + [sofacama]:
+        print(f"  {tienda.agregar_mueble(mueble)}")
+
+    print("✅ Catálogo inicial creado con éxito!")
 
 
-def crear_comedores_ejemplo(tienda: 'TiendaMuebles') -> None:
-    """
-    Crea comedores de ejemplo para demostrar la composición.
-    
-    Args:
-        tienda: Instancia de TiendaMuebles donde agregar los comedores
-    """
+def crear_comedores_ejemplo(tienda: TiendaMuebles) -> None:
+    """Crea comedores de ejemplo para demostrar la composición."""
     print("\n🍽️ Creando comedores de ejemplo...")
-    
-    mesa_familiar = Mesa(
-        nombre="Mesa Familiar Extensible",
-        material="Madera",
-        color="Roble",
-        precio_base=800.0,
-        forma="rectangular",
-        capacidad_personas=8
-    )
-    
-    sillas_familiares = []
-    for i in range(1, 7):  # 6 sillas
-        silla = Silla(
-            nombre=f"Silla Familiar {i}",
-            material="Madera",
-            color="Roble",
-            precio_base=120.0,
-            tiene_respaldo=True,
-            material_tapizado="tela"
-        )
-        sillas_familiares.append(silla)
-    
-    comedor_familiar = Comedor(
-        nombre="Comedor Familiar Completo",
-        mesa=mesa_familiar,
-        sillas=sillas_familiares
-    )
-    
-    mesa_moderna = Mesa(
-        nombre="Mesa Moderna Cristal",
-        material="Vidrio",
-        color="Negro",
-        precio_base=600.0,
-        forma="redonda",
-        capacidad_personas=4
-    )
-    
-    sillas_modernas = []
-    for i in range(1, 5):  # 4 sillas
-        silla = Silla(
-            nombre=f"Silla Moderna {i}",
-            material="Metal",
-            color="Negro",
-            precio_base=150.0,
-            tiene_respaldo=True,
-            material_tapizado="cuero"
-        )
-        sillas_modernas.append(silla)
-    
-    comedor_moderno = Comedor(
-        nombre="Comedor Moderno Premium",
-        mesa=mesa_moderna,
-        sillas=sillas_modernas
-    )
-    
-    comedores = [comedor_familiar, comedor_moderno]
-    for comedor in comedores:
-        resultado = tienda.agregar_comedor(comedor)
-        print(f"  ✓ {resultado}")
-    
+
+    mesa_familiar = Mesa("Mesa Familiar Extensible", "Madera", "Roble", 800.0,
+                         largo=200.0, ancho=100.0, alto=75.0, material_superficie="madera")
+    sillas_familiares = [
+        Silla(f"Silla Familiar {i}", "Madera", "Roble", 120.0,
+              tiene_respaldo=True, material_tapizado="tela")
+        for i in range(1, 7)
+    ]
+    comedor_familiar = Comedor("Comedor Familiar Completo",
+                               mesa=mesa_familiar, sillas=sillas_familiares)
+
+    mesa_moderna = Mesa("Mesa Moderna Cristal", "Vidrio", "Negro", 600.0,
+                        largo=120.0, ancho=120.0, alto=75.0, material_superficie="vidrio")
+    sillas_modernas = [
+        Silla(f"Silla Moderna {i}", "Metal", "Negro", 150.0,
+              tiene_respaldo=True, material_tapizado="cuero")
+        for i in range(1, 5)
+    ]
+    comedor_moderno = Comedor("Comedor Moderno Premium",
+                              mesa=mesa_moderna, sillas=sillas_modernas)
+
+    for comedor in [comedor_familiar, comedor_moderno]:
+        print(f"  {tienda.agregar_comedor(comedor)}")
+
     print("✅ Comedores de ejemplo creados!")
 
 
-def aplicar_descuentos_ejemplo(tienda: 'TiendaMuebles') -> None:
-    """
-    Aplica algunos descuentos de ejemplo para demostrar el sistema.
-    
-    Args:
-        tienda: Instancia de TiendaMuebles donde aplicar descuentos
-    """
+def aplicar_descuentos_ejemplo(tienda: TiendaMuebles) -> None:
+    """Aplica descuentos de ejemplo para demostrar el sistema."""
     print("\n🏷️ Aplicando descuentos de ejemplo...")
-    
-    descuentos = [
-        ("silla", 10),    # 10% de descuento en sillas
-        ("mesa", 15),     # 15% de descuento en mesas
-        ("sofa", 20),     # 20% de descuento en sofás
-    ]
-    
-    for categoria, porcentaje in descuentos:
-        resultado = tienda.aplicar_descuento(categoria, porcentaje)
-        print(f"  ✓ {resultado}")
-    
+    for categoria, porcentaje in [("silla", 10), ("mesa", 15), ("sofa", 20)]:
+        print(f"  {tienda.aplicar_descuento(categoria, porcentaje)}")
     print("✅ Descuentos aplicados!")
 
 
-def mostrar_estadisticas_iniciales(tienda: 'TiendaMuebles') -> None:
-    """
-    Muestra estadísticas iniciales de la tienda.
-    
-    Args:
-        tienda: Instancia de TiendaMuebles para obtener estadísticas
-    """
+def mostrar_estadisticas_iniciales(tienda: TiendaMuebles) -> None:
+    """Muestra estadísticas iniciales de la tienda."""
     print("\n📊 Estadísticas iniciales de la tienda:")
-    
-    # Obtener y mostrar estadísticas
     stats = tienda.obtener_estadisticas()
-    
     print(f"  📦 Total de muebles: {stats['total_muebles']}")
-    print(f"  🍽️ Total de comedores: {stats['total_comedores']}")
+    print(f"  🍽️  Total de comedores: {stats['total_comedores']}")
     print(f"  💰 Valor del inventario: ${stats['valor_inventario']:,.2f}")
-    print(f"  🏷️ Descuentos activos: {stats['descuentos_activos']}")
-    
+    print(f"  🏷️  Descuentos activos: {stats['descuentos_activos']}")
     print("\n  📋 Distribución por tipos:")
-    for tipo, cantidad in stats['tipos_muebles'].items():
+    for tipo, cantidad in stats["tipos_muebles"].items():
         print(f"    • {tipo}: {cantidad} unidades")
 
 
 def main():
-    """
-    Función principal que inicializa y ejecuta la aplicación.
-    
-    Esta función demuestra todos los conceptos de OOP implementados:
-    - Creación de objetos de diferentes clases
-    - Herencia y polimorfismo al agregar diferentes tipos de muebles
-    - Composición con los comedores
-    - Herencia múltiple con el sofá-cama
-    - Encapsulación y abstracción en toda la jerarquía
-    """
+    """Función principal que inicializa y ejecuta la aplicación."""
     try:
         print("🏠 Bienvenido a la Tienda de Muebles - Taller OOP 🏠")
         print("=" * 50)
-        
+
         tienda = TiendaMuebles("Mueblería Moderna OOP")
         print(f"🏪 Inicializando {tienda.nombre}...")
-        
+
         crear_catalogo_inicial(tienda)
-        
         crear_comedores_ejemplo(tienda)
-        
         aplicar_descuentos_ejemplo(tienda)
-        
         mostrar_estadisticas_iniciales(tienda)
-        
+
         print("\n🎯 Iniciando interfaz de usuario...")
         menu = MenuTienda(tienda)
-        
+
         input("\nPresiona Enter para iniciar el menú interactivo...")
-        
         menu.ejecutar()
-        
+
     except KeyboardInterrupt:
-        print("\n\n👋 Programa interrumpido por el usuario. ¡Hasta luego!")
+        print("\n\n👋 Programa interrumpido. ¡Hasta luego!")
     except Exception as e:
         print(f"\n❌ Error inesperado: {e}")
         import traceback
@@ -367,6 +170,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # Punto de entrada de la aplicación
     main()
-
